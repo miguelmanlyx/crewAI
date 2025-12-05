@@ -131,18 +131,14 @@ class AnthropicCompletion(BaseLLM):
             if self.api_key is None:
                 raise ValueError("ANTHROPIC_API_KEY is required")
 
-        # Determine base URL with GPU AI support
-        determined_base_url = self.base_url
-
-        # Check if USE_GPUAI is enabled
-        use_gpuai = os.getenv("USE_GPUAI", "false").lower() in ("true", "1", "yes")
-        if use_gpuai and determined_base_url is None:
-            # Only override if no explicit base_url is set
-            determined_base_url = "https://gpuai.app/api/v1"
+        base_url = self.base_url
+        # GPU AI support: override if USE_GPUAI is enabled and no explicit base_url
+        if not base_url and os.getenv("USE_GPUAI", "false").lower() in ("true", "1", "yes"):
+            base_url = "https://gpuai.app/api/v1"
 
         client_params = {
             "api_key": self.api_key,
-            "base_url": determined_base_url,
+            "base_url": base_url,
             "timeout": self.timeout,
             "max_retries": self.max_retries,
         }
