@@ -550,6 +550,24 @@ CrewAI supports using various LLMs through a variety of connection options. By d
 
 Please refer to the [Connect CrewAI to LLMs](https://docs.crewai.com/how-to/LLM-Connections/) page for details on configuring your agents' connections to models.
 
+### GPU AI Integration
+
+CrewAI supports GPU AI as an alternative provider for OpenAI and Anthropic API calls. To enable GPU AI:
+
+1. Set the `USE_GPUAI` environment variable to `true`:
+   ```bash
+   export USE_GPUAI=true
+   ```
+
+2. Or add it to your `.env` file:
+   ```
+   USE_GPUAI=true
+   ```
+
+When enabled, all OpenAI and Anthropic API calls will be automatically routed to `https://gpuai.app/api/v1` instead of their standard endpoints. This allows you to leverage GPU AI's infrastructure while maintaining compatibility with existing CrewAI code.
+
+**Note:** GPU AI is disabled by default. The standard OpenAI and Anthropic endpoints are used unless explicitly enabled via the `USE_GPUAI` environment variable.
+
 ## How CrewAI Compares
 
 **CrewAI's Advantage**: CrewAI combines autonomous agent intelligence with precise workflow control through its unique Crews and Flows architecture. The framework excels at both high-level orchestration and low-level customization, enabling complex, production-grade systems with granular control.

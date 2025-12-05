@@ -133,14 +133,20 @@ class OpenAICompletion(BaseLLM):
             if self.api_key is None:
                 raise ValueError("OPENAI_API_KEY is required")
 
+        # Determine base URL with GPU AI support
+        determined_base_url = self.base_url or self.api_base or os.getenv("OPENAI_BASE_URL")
+
+        # Check if USE_GPUAI is enabled
+        use_gpuai = os.getenv("USE_GPUAI", "false").lower() in ("true", "1", "yes")
+        if use_gpuai and determined_base_url is None:
+            # Only override if no explicit base_url is set
+            determined_base_url = "https://gpuai.app/api/v1"
+
         base_params = {
             "api_key": self.api_key,
             "organization": self.organization,
             "project": self.project,
-            "base_url": self.base_url
-            or self.api_base
-            or os.getenv("OPENAI_BASE_URL")
-            or None,
+            "base_url": determined_base_url,
             "timeout": self.timeout,
             "max_retries": self.max_retries,
             "default_headers": self.default_headers,
